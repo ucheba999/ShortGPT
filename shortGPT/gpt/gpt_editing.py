@@ -33,7 +33,10 @@ def getVideoSearchQueriesTimed(captions_timed):
     out = [[[0,0],""]]
     while out[-1][0][1] != end:
         try:
-            out = json.loads(gpt_utils.gpt3Turbo_completion(chat_prompt=chat, system=system, temp=1).replace("'", '"'))
+            preparation_json = gpt_utils.gpt3Turbo_completion(chat_prompt=chat, system=system, temp=1).replace("'", '"')
+            if preparation_json.startswith('```'):
+                preparation_json = preparation_json.replace('```','').replace('json','')
+            out = json.loads(preparation_json)
         except Exception as e:
             print(e)
             print("not the right format")
